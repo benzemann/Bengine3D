@@ -1,0 +1,36 @@
+﻿Build started 27-02-2015 12:07:12.
+     1>Project "C:\Users\Jeppe\Dropbox\Jeppe\Programmering\Bengine3D\Bengine3D\Bengine3D.vcxproj" on node 2 (Build target(s)).
+     1>C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V120\Microsoft.CppBuild.targets(381,5): warning MSB8028: The intermediate directory (Debug\) contains files shared from another project (02561-01-03.vcxproj, Bengine3D(test).vcxproj).  This can lead to incorrect clean and rebuild behavior.
+     1>ClCompile:
+         D:\Programmer\Visual Studio\VC\bin\CL.exe /c /IAngel /I../dependencies/include/ /ZI /nologo /W4 /WX- /Od /Oy- /D _CRT_SECURE_NO_WARNINGS /D WIN32 /D _DEBUG /D _CONSOLE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt main.cpp
+         main.cpp
+     1>c:\users\jeppe\dropbox\jeppe\programmering\bengine3d\bengine3d\angel\angel.h(74): warning C4305: 'initializing' : truncation from 'double' to 'const GLfloat'
+     1>c:\users\jeppe\dropbox\jeppe\programmering\bengine3d\bengine3d\angel\mat.h(590): warning C4127: conditional expression is constant
+     1>c:\users\jeppe\dropbox\jeppe\programmering\bengine3d\bengine3d\angel\mat.h(707): warning C4244: '=' : conversion from 'double' to 'GLfloat', possible loss of data
+     1>c:\users\jeppe\dropbox\jeppe\programmering\bengine3d\bengine3d\angel\mat.h(708): warning C4244: '=' : conversion from 'double' to 'GLfloat', possible loss of data
+     1>c:\users\jeppe\dropbox\jeppe\programmering\bengine3d\bengine3d\angel\mat.h(709): warning C4244: '=' : conversion from 'double' to 'GLfloat', possible loss of data
+     1>c:\users\jeppe\dropbox\jeppe\programmering\bengine3d\bengine3d\angel\mat.h(730): warning C4244: '=' : conversion from 'double' to 'GLfloat', possible loss of data
+     1>c:\users\jeppe\dropbox\jeppe\programmering\bengine3d\bengine3d\angel\mat.h(732): warning C4244: '=' : conversion from 'double' to 'GLfloat', possible loss of data
+     1>c:\users\jeppe\dropbox\jeppe\programmering\bengine3d\bengine3d\angel\mat.h(735): warning C4244: '=' : conversion from 'double' to 'GLfloat', possible loss of data
+     1>c:\users\jeppe\dropbox\jeppe\programmering\bengine3d\bengine3d\angel\mat.h(753): warning C4244: '=' : conversion from 'double' to 'GLfloat', possible loss of data
+     1>c:\users\jeppe\dropbox\jeppe\programmering\bengine3d\bengine3d\angel\mat.h(805): warning C4127: conditional expression is constant
+     1>c:\users\jeppe\dropbox\jeppe\programmering\bengine3d\bengine3d\angel\mat.h(812): warning C4127: conditional expression is constant
+     1>c:\users\jeppe\dropbox\jeppe\programmering\bengine3d\bengine3d\angel\mat.h(819): warning C4127: conditional expression is constant
+     1>c:\users\jeppe\dropbox\jeppe\programmering\bengine3d\bengine3d\angel\mat.h(827): warning C4127: conditional expression is constant
+     1>c:\users\jeppe\dropbox\jeppe\programmering\bengine3d\bengine3d\main.cpp(92): warning C4305: 'argument' : truncation from 'double' to 'const GLfloat'
+     1>c:\users\jeppe\dropbox\jeppe\programmering\bengine3d\dependencies\include\gl\freeglut_std.h(618): warning C4505: 'glutCreateMenu_ATEXIT_HACK' : unreferenced local function has been removed
+     1>c:\users\jeppe\dropbox\jeppe\programmering\bengine3d\bengine3d\angel\checkerror.h(39): warning C4701: potentially uninitialized local variable 'msg' used
+     1>c:\users\jeppe\dropbox\jeppe\programmering\bengine3d\bengine3d\angel\checkerror.h(39): warning C4703: potentially uninitialized local pointer variable 'msg' used
+       Link:
+         D:\Programmer\Visual Studio\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\Jeppe\Dropbox\Jeppe\Programmering\Bengine3D\Debug\Bengine3D.exe" /INCREMENTAL /NOLOGO ../dependencies/lib/glew32.lib ../dependencies/lib/freeglut.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:\Users\Jeppe\Dropbox\Jeppe\Programmering\Bengine3D\Debug\Bengine3D.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\Jeppe\Dropbox\Jeppe\Programmering\Bengine3D\Debug\Bengine3D.lib" /MACHINE:X86 Debug\InitShader.obj
+         Debug\main.obj
+         Debug\Object.obj
+         Debug\Scene.obj
+         Debug\Shader.obj
+         Debug\User.obj
+         Bengine3D.vcxproj -> C:\Users\Jeppe\Dropbox\Jeppe\Programmering\Bengine3D\Debug\Bengine3D.exe
+     1>Done Building Project "C:\Users\Jeppe\Dropbox\Jeppe\Programmering\Bengine3D\Bengine3D\Bengine3D.vcxproj" (Build target(s)).
+
+Build succeeded.
+
+Time Elapsed 00:00:01.45

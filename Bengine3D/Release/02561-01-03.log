@@ -1,0 +1,34 @@
+﻿Build started 24-02-2015 19:47:55.
+     1>Project "C:\Users\Jeppe\Dropbox\DTU\1. Semester\Computer Graphics\Exercise01\Exercise01\02561-01-03\02561-01-03.vcxproj" on node 2 (Build target(s)).
+     1>ClCompile:
+         C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\CL.exe /c /IAngel /I../dependencies/include/ /Zi /nologo /W4 /WX- /O2 /Oi /Oy- /GL /D _CRT_SECURE_NO_WARNINGS /D WIN32 /D NDEBUG /D _CONSOLE /Gm- /EHsc /MD /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Release\\" /Fd"Release\vc110.pdb" /Gd /TP /analyze- /errorReport:prompt "main-01-03.cpp"
+         main-01-03.cpp
+     1>C:\Users\Jeppe\Dropbox\DTU\1. Semester\Computer Graphics\Exercise01\Exercise01\02561-01-03\Angel\Angel.h(74): warning C4305: 'initializing' : truncation from 'double' to 'const GLfloat'
+     1>c:\users\jeppe\dropbox\dtu\1. semester\computer graphics\exercise01\exercise01\02561-01-03\angel\mat.h(590): warning C4127: conditional expression is constant
+     1>c:\users\jeppe\dropbox\dtu\1. semester\computer graphics\exercise01\exercise01\02561-01-03\angel\mat.h(707): warning C4244: '=' : conversion from 'double' to 'GLfloat', possible loss of data
+     1>c:\users\jeppe\dropbox\dtu\1. semester\computer graphics\exercise01\exercise01\02561-01-03\angel\mat.h(708): warning C4244: '=' : conversion from 'double' to 'GLfloat', possible loss of data
+     1>c:\users\jeppe\dropbox\dtu\1. semester\computer graphics\exercise01\exercise01\02561-01-03\angel\mat.h(709): warning C4244: '=' : conversion from 'double' to 'GLfloat', possible loss of data
+     1>c:\users\jeppe\dropbox\dtu\1. semester\computer graphics\exercise01\exercise01\02561-01-03\angel\mat.h(730): warning C4244: '=' : conversion from 'double' to 'GLfloat', possible loss of data
+     1>c:\users\jeppe\dropbox\dtu\1. semester\computer graphics\exercise01\exercise01\02561-01-03\angel\mat.h(732): warning C4244: '=' : conversion from 'double' to 'GLfloat', possible loss of data
+     1>c:\users\jeppe\dropbox\dtu\1. semester\computer graphics\exercise01\exercise01\02561-01-03\angel\mat.h(735): warning C4244: '=' : conversion from 'double' to 'GLfloat', possible loss of data
+     1>c:\users\jeppe\dropbox\dtu\1. semester\computer graphics\exercise01\exercise01\02561-01-03\angel\mat.h(753): warning C4244: '=' : conversion from 'double' to 'GLfloat', possible loss of data
+     1>c:\users\jeppe\dropbox\dtu\1. semester\computer graphics\exercise01\exercise01\02561-01-03\angel\mat.h(805): warning C4127: conditional expression is constant
+     1>c:\users\jeppe\dropbox\dtu\1. semester\computer graphics\exercise01\exercise01\02561-01-03\angel\mat.h(812): warning C4127: conditional expression is constant
+     1>c:\users\jeppe\dropbox\dtu\1. semester\computer graphics\exercise01\exercise01\02561-01-03\angel\mat.h(819): warning C4127: conditional expression is constant
+     1>c:\users\jeppe\dropbox\dtu\1. semester\computer graphics\exercise01\exercise01\02561-01-03\angel\mat.h(827): warning C4127: conditional expression is constant
+     1>c:\users\jeppe\dropbox\dtu\1. semester\computer graphics\exercise01\exercise01\dependencies\include\gl\freeglut_std.h(618): warning C4505: 'glutCreateMenu_ATEXIT_HACK' : unreferenced local function has been removed
+       Link:
+         C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\Jeppe\Dropbox\DTU\1. Semester\Computer Graphics\Exercise01\Exercise01\Release\02561-01-03.exe" /INCREMENTAL:NO /NOLOGO ../dependencies/lib/glew32.lib ../dependencies/lib/freeglut.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:\Users\Jeppe\Dropbox\DTU\1. Semester\Computer Graphics\Exercise01\Exercise01\Release\02561-01-03.pdb" /SUBSYSTEM:CONSOLE /OPT:REF /OPT:ICF /LTCG /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\Jeppe\Dropbox\DTU\1. Semester\Computer Graphics\Exercise01\Exercise01\Release\02561-01-03.lib" /MACHINE:X86 /SAFESEH Release\InitShader.obj
+         "Release\main-01-03.obj"
+         Generating code
+     1>c:\users\jeppe\dropbox\dtu\1. semester\computer graphics\exercise01\exercise01\02561-01-03\angel\checkerror.h(39): warning C4701: potentially uninitialized local variable 'msg' used
+     1>c:\users\jeppe\dropbox\dtu\1. semester\computer graphics\exercise01\exercise01\02561-01-03\angel\checkerror.h(39): warning C4703: potentially uninitialized local pointer variable 'msg' used
+     1>c:\users\jeppe\dropbox\dtu\1. semester\computer graphics\exercise01\exercise01\02561-01-03\angel\checkerror.h(51): warning C4701: potentially uninitialized local variable 'msg' used
+     1>c:\users\jeppe\dropbox\dtu\1. semester\computer graphics\exercise01\exercise01\02561-01-03\angel\checkerror.h(51): warning C4703: potentially uninitialized local pointer variable 'msg' used
+         Finished generating code
+         02561-01-03.vcxproj -> C:\Users\Jeppe\Dropbox\DTU\1. Semester\Computer Graphics\Exercise01\Exercise01\Release\02561-01-03.exe
+     1>Done Building Project "C:\Users\Jeppe\Dropbox\DTU\1. Semester\Computer Graphics\Exercise01\Exercise01\02561-01-03\02561-01-03.vcxproj" (Build target(s)).
+
+Build succeeded.
+
+Time Elapsed 00:00:01.68
