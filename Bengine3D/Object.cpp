@@ -13,5 +13,13 @@ void Object::draw(Shader& shader, mat4 view){
 	shader.setDiffuseColorUniform(material.getDiffuseColor());
 	shader.setSpecularColorUniform(material.getSpecularColor());
 	shader.setShininessUniform(material.getShininess());
+	if (material.IsTextured()){
+		shader.setTextureUniform(material.getTexture());
+		shader.setIsTexturedUniform(1);
+	}
+	else {
+		shader.setIsTexturedUniform(0);
+	}
+	shader.setTexScaleUniform(material.getTexScale());
 	glDrawArrays(GL_TRIANGLES, 0, getNumberOfVertices());
 }

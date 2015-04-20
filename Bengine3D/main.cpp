@@ -21,6 +21,7 @@ float speed = 0.1f;
 bool fullscreen = false;
 bool showMsPerFrame = false;
 bool flyMode = false;
+bool reloadShaders = false;
 int frames = 0;
 int oldTimeSinceStart = 0;
 
@@ -38,22 +39,15 @@ void init(int, char**);
 void changeViewPort(int w, int h);
 void loop();
 void showControls();
-void buildFrameBufferObject(int width, int height);
-void updateShadowTexture();
+void buildFrameBufferObject(int id);
+void updateShadowTexture(int id);
 void keyOperations();
 void keyPressed(unsigned char, int, int);
 void keyReleased(unsigned char, int, int);
 void mouseMovement(int x, int y);
-//TESTING!
-void makeCheckImage(void);
-static GLubyte checkImage[64][64][4];
-GLuint texName;
+void loadShaders();
 
 GLuint loadBufferData(Vertex* vertices, int vertexCount, Shader shader);
-
-int shadowDims = 4096;
-GLuint depthTextureID;
-GLuint framebufferobject;
 
 User user;
 Shader shader, shadowShader;
@@ -105,31 +99,14 @@ void init(int argc, char* argv[])
 	glCullFace(GL_BACK);
 	// Initialize openGL
 	Angel::InitOpenGL();
-	// Load the shaders
-	shader.loadShader();
-	shadowShader.loadShader();
-	
-	
-	//TESTING!
-	makeCheckImage();
-	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-
-	glGenTextures(1, &texName);
-	glBindTexture(GL_TEXTURE_2D, texName);
-
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER,
-		GL_NEAREST);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,
-		GL_NEAREST);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 64,
-		64, 0, GL_RGBA, GL_UNSIGNED_BYTE,
-		checkImage);
-	// Build frame buffer object for shadow mapping
-	buildFrameBufferObject(shadowDims, shadowDims);
+	// load shaders
+	loadShaders();
 	// Setups the scene (create objects, user, and lights)
 	setupScene();
+	// Build frame buffer object for shadow mapping
+	for (int i = 0; i < scene.getNumberOfLights(); i++){
+		buildFrameBufferObject(i);
+	}
 	// Enable depth testing
 	glEnable(GL_DEPTH_TEST);
 	// Check for errors
@@ -137,41 +114,54 @@ void init(int argc, char* argv[])
 	// Enters the GLUT event processing loop
 	glutMainLoop();
 }
-// TESTING!
-void makeCheckImage(void)
-{
-	int i, j, c;
-
-	for (i = 0; i < 64; i++) {
-		for (j = 0; j < 64; j++) {
-			c = ((((i & 0x8) == 0) ^ ((j & 0x8)) == 0)) * 255;
-			checkImage[i][j][0] = (GLubyte)c;
-			checkImage[i][j][1] = (GLubyte)c;
-			checkImage[i][j][2] = (GLubyte)c;
-			checkImage[i][j][3] = (GLubyte)255;
-		}
-	}
+// Function to load the shaders
+void loadShaders(){
+	shader.loadShader();
+	shadowShader.loadShader();
 }
 // Setup the scene here!q
 void setupScene(){
 	scene = Scene();
-	Material green = Material(vec4(0.0f, 1.0f, 0.0f, 1.0f), vec4(1.0), 2.0f);
-	Material red = Material(vec4(1.0f, 0.0f, 0.0f, 1.0f));
-	Material blue = Material(vec4(0.0f, 0.0f, 1.0f, 1.0f));
+	// Materials
+	// Internet page with material properties: http://www.real3dtutorials.com/tut00008.php
+	//Material ruby = Material(vec4(0.61424f, 0.04136f, 0.04136f, 1.0f), vec4(0.727811f, 0.626959f, 0.626959f, 1.0f), 76.8f);
+	//Material chrome = Material(vec4(0.4f, 0.4f, 0.4f, 1.0f), vec4(0.774597f, 0.774597f, 0.774597, 1.0f), 76.8f);
+	Material defaultMat = Material();
 	user = User(vec3(5.0f, 0.5f, 0.0f));
-	scene.createPlane(vec3(0.0f, 0.0f, 0.0f), vec2(20.0f, 20.0f), shader, green);
-	scene.createBox(vec3(0.0f, 5.0f, 0.0f), vec3(2.0f), shader, blue, vec3(0.0f, 45.0f, 0.0f));
-	scene.createBox(vec3(0.0f, 0.5f, 2.0f), vec3(1.0f), shader, red, vec3(0.0f, 45.0f, 0.0f));
-	scene.createLightSource(vec3(-8.0f, 10.0f, 3.0f), 1.0f);
+	Material copper = Material(vec4(0.7038f, 0.27048f, 0.0828f, 1.0f), vec4(0.256777f, 0.137622f, 0.086014f, 1.0f), 12.8);
+	copper.setDiffuseColor(vec4(1.0f));
+	copper.createTexture(400, 400, "./Textures/copper.bmp");
+	Material box = Material(512, 512, "./Textures/box.bmp");
+	Material grass = Material(640, 640, "./Textures/grass.bmp", vec2(30.0f));
+	Material checkerBoard = Material(512, 512, "./Textures/checkerBoard.bmp", vec2(0.5f));
+	// The User
+	user = User(vec3(5.0f, 0.5f, 0.0f));
+	// Objects
+	scene.createPlane(vec3(0.0f, 0.0f, 0.0f), vec2(20.0f, 20.0f), shader, grass);
+	scene.createBox(vec3(0.0f, 5.0f, 0.0f), vec3(2.0f), shader, checkerBoard, vec3(0.0f, 45.0f, 0.0f));
+	scene.createBox(vec3(0.0f, 0.5f, 2.0f), vec3(1.0f), shader, box, vec3(0.0f, 45.0f, 0.0f));
+	scene.createPlane(vec3(5.0f, 0.05f, 5.0f), vec2(2.0f, 2.0f), shader, copper);
+	scene.createOBJ(vec3(-5.0f, 1.0f, -5.0f), vec3(1.0f), shader, defaultMat, vec3(0.0f), "./Models/test.obj");
+	// Ligth Sources
+	scene.createLightSource(vec3(0.5f, 0.5f, 0.0f), vec3(1.0f), 1);
+	scene.createLightSource(vec3(-0.5f, 0.5f, 0.0f), vec3(1.0f), 0);
 }
 // Function to render the scene, called each time the window needs to be redrawn
 void render()
 {
+	// Reload the shaders if it is necessary
+	if (reloadShaders){
+		reloadShaders = false;
+		loadShaders();
+		cout << "  Shaders reloaded" << endl;
+	}
 	// Check for key inputs
 	keyOperations();
 	// Use the shadow shader and render the scene from the lights point of view in updateShadowTexture
 	shadowShader.useShader();
-	updateShadowTexture();
+	for (int i = 0; i < scene.getNumberOfLights(); i++){
+		updateShadowTexture(i);
+	}
 	// Clears the color and depth buffer
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	//updateShadowTexture();
@@ -182,23 +172,13 @@ void render()
 	mat4 projection = Perspective(53.13f, WINDOW_WIDTH / (float)WINDOW_HEIGHT, 0.001f, 10000.0f);
 	shader.useShader();
 	shader.setProjectionUniform(projection);
-	shader.setShadowTextureUniform(depthTextureID);
-	shader.setTextureUniform(texName);
 	shader.setUserPosUniform(user.getPosition());
-	// Calculate depth view projection matrix and the shadow bias matrix and send it to the shader
-	mat4 lightView = LookAt(scene.getLightPos(), vec3(0.0f), vec3(0.0f, 1.0f, 0.0f));
-	mat4 lightProjection = Ortho(-30.0f, 30.0f, -30.0f, 30.0f, -10.0f, 60.0);
-	mat4 depthVP = lightProjection * lightView;
-	mat4 biasMatrix = Translate(vec3(0.5f));
-	biasMatrix *= Scale(vec3(0.5f));
-	shader.setdepthVPUniform(depthVP);
-	shader.setDepthBiasUniform(biasMatrix);
+	scene.setShadowUniforms(shader);
 	// Draw the scene from the users point of view
 	mat4 view = user.getViewMatrix();
 	scene.drawObjects(shader, view);
 	// Set the ambient and light uniforms
-	shader.setLighPosUniform(scene.getLightPos());
-	shader.setLightIntensityUniform(scene.getLightInt());
+	scene.setLightUniforms(shader);
 	shader.setAmbientUniform(vec4(0.2f));
 	// Swaps the buffers of the current window and checks for errors
 	glutSwapBuffers();
@@ -224,12 +204,23 @@ void loop(){
 	vec3 rot = tempObj.getRotation();
 	tempObj.rotate('Y', rot.y + 1.0f);
 	scene.setObject(1, tempObj);
-
+	// Flashlight
+	vec3 viewVector = user.getDir() - user.getPosition();
+	viewVector.y = 0.0f;
+	viewVector = normalize(viewVector);
+	vec3 rightVector;
+	rightVector.x = -viewVector.z;
+	rightVector.z = viewVector.x;
+	Light lightTemp = scene.getLight(1);
+	lightTemp.setPosition(user.getPosition() + (rightVector * 0.1f) );
+	lightTemp.setDir(user.getDir());
+	scene.setLight(1, lightTemp);
 	// Tells glut to call the render function when finished render the scene.
 	glutPostRedisplay();
 }
 // Build framebufferobject for depthTesting
-void buildFrameBufferObject(int width, int height) {
+void buildFrameBufferObject(int id) {
+	GLuint depthTextureID, framebufferobject;
 	// Generate shadow texture and set the filtering, wraping and comparison parameters
 	glGenTextures(1, &depthTextureID);
 	glBindTexture(GL_TEXTURE_2D, depthTextureID);
@@ -239,7 +230,7 @@ void buildFrameBufferObject(int width, int height) {
 	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_MODE, GL_COMPARE_REF_TO_TEXTURE);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_FUNC, GL_LESS);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, width, height, 0, GL_DEPTH_COMPONENT, GL_UNSIGNED_INT, 0);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, scene.getLight(id).getShadowDims(), scene.getLight(id).getShadowDims(), 0, GL_DEPTH_COMPONENT, GL_UNSIGNED_INT, 0);
 	// Generate frame buffer object to draw the depth value into
 	glGenFramebuffers(1, &framebufferobject);
 	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, framebufferobject);
@@ -247,24 +238,35 @@ void buildFrameBufferObject(int width, int height) {
 	glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depthTextureID, 0);
 	// Checks for errors with the frame buffer object
 	if (glCheckFramebufferStatus(GL_DRAW_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
-		cout << "Something wrong with FBO" << endl;
+		cout << "  Something wrong with FBO" << endl;
+	Light temp = scene.getLight(id);
+	temp.setShadowBufferObject(framebufferobject);
+	temp.setShadowTexture(depthTextureID);
+	scene.setLight(id, temp);
 	// Binds the normal frame buffer for rendering the scene
 	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
 }
 // Updates the shadow Map
-void updateShadowTexture(){
+void updateShadowTexture(int id){
 	// Disable culling to let the back faces contribute to shadows
 	glDisable(GL_CULL_FACE);
 	// Bind the framebufferobject assosiated with the shadow texture
-	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, framebufferobject);
+	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, scene.getLight(id).getShadowBufferObject());
 	// Clear depth buffer
 	glClear(GL_DEPTH_BUFFER_BIT);
 	// Set light view and projection matrix
-	mat4 lightView = LookAt(scene.getLightPos(), vec3(0.0f), vec3(0.0f, 1.0f, 0.0f));
-	mat4 lightProjection = Ortho(-30.0f, 30.0f, -30.0f, 30.0f, -10.0f, 60.0);
+	mat4 lightView = LookAt(scene.getLightPos(id), scene.getLight(id).getDir(), vec3(0.0f, 1.0f, 0.0f));
+	mat4 lightProjection;
+	if (scene.getLight(id).getType() == 1){
+		lightProjection = Ortho(-30.0f, 30.0f, -30.0f, 30.0f, -10.0f, 60.0);
+	}
+	else {
+		lightProjection = Perspective(53.13f, 1, 0.1f, 60.0f);
+	}
 	// OPTIONAL bind the texture if another texture is bound!
 	// Set the projection uniform and set the viewport to fit the shadow texture
 	shadowShader.setProjectionUniform(lightProjection);
+	int shadowDims = scene.getLight(id).getShadowDims();
 	glViewport(0, 0, shadowDims, shadowDims);
 	// Draw from the light’s point of view
 	scene.drawObjects(shadowShader, lightView);
@@ -281,10 +283,13 @@ void showControls(){
 	cout << "  WASD - Moving the user" << endl;
 	cout << "  Move mouse to look arround" << endl;
 	cout << "  F - Fullscreen on/off" << endl;
-	cout << "  L - Move light position to your position" << endl;
-	cout << "  - and + - Adjust the intensity of the light source" << endl;
+	cout << "  L - Move sunlight dirction from your position to (0,0,0)" << endl;
+	cout << "  K - Turn flashlight on and off" << endl;
+	cout << "  - and + - Adjust the intensity of the sun light" << endl;
 	cout << "  O and p - Adjust the speed of the camera" << endl;
 	cout << "  X - Fly mode" << endl;
+	cout << "  C - Create a box at the users position" << endl;
+	cout << "  R - Reload shaders" << endl;
 	cout << "  M - Show the performance in miliseconds per frame (updated every 300 frames)" << endl;
 	cout << "  H - Show this info again" << endl;
 	cout << "  Q - Quit application" << endl;
@@ -338,16 +343,18 @@ void keyOperations(){
 		
 	}
 	if (keyStates['l'] == true){
-		scene.setLightPos(user.getPosition());
+		scene.setLightPos(user.getPosition(),0);
 	}
 	if (keyStates['+'] == true){
-		scene.setLightInt(scene.getLightInt() + 0.1f);
+		scene.setLightInt(scene.getLightInt(0) + 0.1f,0);
+		cout << "  Light intensity: " << scene.getLightInt(0) << endl;
 	}
 	if (keyStates['-'] == true){
-		scene.setLightInt(scene.getLightInt() - 0.1f);
-		if (scene.getLightInt() < 0.0f){
-			scene.setLightInt(0.0f);
+		scene.setLightInt(scene.getLightInt(0) - vec3(0.1f),0);
+		if (scene.getLightInt(0).x < 0.0f){
+			scene.setLightInt(vec3(0.0f), 0);
 		}
+		cout << "  Light intensity: " << scene.getLightInt(0) << endl;
 	}
 	if (keyStates['p'] == true){
 		speed += 0.01f;
@@ -359,6 +366,9 @@ void keyOperations(){
 			speed = 0.0f;
 		}
 		cout << "  Speed: " << speed << endl;
+	}
+	if (keyStates['r'] == true){
+		reloadShaders = true;
 	}
 }
 // Called when the mouse is moved
@@ -382,6 +392,20 @@ void keyPressed(unsigned char key, int x, int y){
 		}
 		else {
 			cout << "  FlyMode is ON" << endl;
+		}
+	}
+	else if (key == 'c'){
+		Material box = Material(512, 512, "./Textures/box.bmp");
+		scene.createBox(user.getPosition(), vec3(1.0f), shader, box, vec3(0.0f, 0.0f, 0.0f));
+	}
+	else if (key == 'k'){
+		if (scene.getLightInt(1).x == 1.0f){
+			scene.setLightInt(vec3(0.0f), 1);
+			cout << "  Flashlight off" << endl;
+		}
+		else {
+			scene.setLightInt(vec3(1.0f), 1);
+			cout << "  Flashlight on" << endl;
 		}
 	}
 }

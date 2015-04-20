@@ -32,11 +32,17 @@ public:
 	virtual void setNormalMatUniform(mat3 norMat){
 		glUniformMatrix3fv(normalMatUniform, 1, GL_TRUE, norMat);
 	};
-	virtual void setLighPosUniform(vec4 lightPos){
-		glUniform4fv(lightPosUniform, 1, lightPos);
+	virtual void setLighPosUniform(vec4 lightPos[], int size){
+		glUniform4fv(lightPosUniform, size, (const GLfloat*)&lightPos[0]);
 	};
-	virtual void setLightIntensityUniform(float intensity){
-		glUniform1f(lightIntensityUniform, intensity);
+	virtual void setLightIntensityUniform(vec3 intensity[], int size){
+		glUniform3fv(lightIntensityUniform, size, (const GLfloat*)&intensity[0]);
+	};
+	virtual void setLightDirUniform(vec3 dir[], int size){
+		glUniform3fv(lightDirUniform, size, (const GLfloat*)&dir[0]);
+	};
+	virtual void setLightConeAngleUniform(float angles[], int size){
+		glUniform1fv(lightConeAngleUniform, size, (const GLfloat*)&angles[0]);
 	};
 	virtual void setAmbientUniform(vec4 ambient){
 		glUniform4fv(ambientUniform, 1, ambient);
@@ -53,33 +59,46 @@ public:
 	virtual void setShininessUniform(float s){
 		glUniform1f(shininessUniform, s);
 	};
-	virtual void setShadowTextureUniform(GLuint depthTextureID){
-		glActiveTexture(GL_TEXTURE1);
-		glBindTexture(GL_TEXTURE_2D, depthTextureID);
-		glUniform1i(shadowTextureUniform, 1);
+	virtual void setShadowTextureUniform(GLuint depthTextureID, int id){
+		if (id == 0){
+			glActiveTexture(GL_TEXTURE1);
+			glBindTexture(GL_TEXTURE_2D, depthTextureID);
+			glUniform1i(shadowTextureUniform, 1);
+		}
+		else {
+			glActiveTexture(GL_TEXTURE2);
+			glBindTexture(GL_TEXTURE_2D, depthTextureID);
+			glUniform1i(shadowTextureUniform2, 2);
+		}
+		
 	}
 	virtual void setTextureUniform(GLuint tex){
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, tex);
 		glUniform1i(textureUniform, 0);
 	}
-	virtual void setdepthVPUniform(mat4 vp){
-		glUniformMatrix4fv(depthVPUniform, 1, GL_TRUE, vp);
+	virtual void setdepthVPUniform(mat4 vp[], int size){
+		glUniformMatrix4fv(depthVPUniform, size, GL_TRUE, (const GLfloat*)&vp[0]);
 	}
-	virtual void setDepthBiasUniform(mat4 bias){
-		glUniformMatrix4fv(depthBiasUniform, 1, GL_TRUE, bias);
+	virtual void setDepthBiasUniform(mat4 bias[], int size){
+		glUniformMatrix4fv(depthBiasUniform, size, GL_TRUE, (const GLfloat*)&bias[0]);
+	}
+	virtual void setTexScaleUniform(vec2 ts){
+		glUniform2fv(texScaleUniform, 1, ts);
+	}
+	virtual void setIsTexturedUniform(int ts){
+		glUniform1i(isTexturedUniform, ts);
 	}
 	virtual GLuint getPositionAttribute(){ return positionAttribute; };
-	virtual GLuint getColorAttribute(){ return colorAttribute; };
 	virtual GLuint getNormalAttribute(){ return normalAttribute; };
 	virtual GLuint getTexCoordAttribute(){ return texCoordAttribute; };
 	virtual bool isUsed(){ return is_used; };
 private:
 	char* name_of_vertex_shader, *name_of_fragment_shader;
 	GLuint shaderProgram;
-	GLuint projectionUniform, modelUniform, viewUniform, normalMatUniform, lightPosUniform, lightIntensityUniform, ambientUniform, shadowTextureUniform, depthVPUniform, depthBiasUniform, textureUniform;
-	GLuint diffuseColorUniform, specularColorUniform, shininessUniform, userPosUniform;
-	GLuint colorAttribute, positionAttribute, normalAttribute, texCoordAttribute;
+	GLuint projectionUniform, modelUniform, viewUniform, normalMatUniform, lightPosUniform, lightIntensityUniform, lightDirUniform, lightConeAngleUniform, ambientUniform, shadowTextureUniform, shadowTextureUniform2, depthVPUniform, depthBiasUniform, textureUniform;
+	GLuint diffuseColorUniform, specularColorUniform, shininessUniform, userPosUniform, texScaleUniform, isTexturedUniform;
+	GLuint positionAttribute, normalAttribute, texCoordAttribute;
 	bool is_used;
 };
 
