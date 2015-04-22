@@ -30,7 +30,7 @@ public:
 	virtual void setObject(int id, Object obj){ objects.at(id) = obj; };
 	virtual bool loadOBJ(const char * path, vector<vec3> & out_vertices, vector<vec2> & out_uvs, vector<vec3> & out_normals);
 	virtual void createOBJ(vec3 position, vec3 scale, Shader shader, Material mat, vec3 rotation, const char * path);
-	virtual void createPlane(vec3 position, vec2 scale, Shader shader, Material mat);
+	virtual void createPlane(vec3 position, vec3 scale, Shader shader, Material mat);
 	virtual void createBox(vec3 position, vec3 scale, Shader shader, Material mat, vec3 rotation = vec3(0.0f));
 	virtual void createLightSource(vec3 pos, vec3 intensity, int type){
 		Light l(pos, intensity, type, 25.0f, vec3(0.0f, 0.0f, 0.0f));
@@ -64,8 +64,11 @@ public:
 
 	};
 	virtual void setShadowUniforms(Shader shader);
+	virtual int getNumberOfObjects(){ return objects.size(); };
 	virtual vec3 getLightPos(int id){ return lights[id].getPosition(); };
 	virtual void setLightPos(vec3 pos, int id){ lights[id].setPosition(pos); };
+	virtual vec3 getLightDir(int id){ return lights[id].getDir(); };
+	virtual void setLightDir(vec3 dir, int id){ lights[id].setDir(dir); };
 	virtual vec3 getLightInt(int id){ return lights[id].getIntensity(); };
 	virtual void setLightInt(vec3 intensity, int id){ lights[id].setIntensity(intensity);};
 	virtual void drawObjects(Shader shader,mat4 view);

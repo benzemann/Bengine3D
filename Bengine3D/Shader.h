@@ -11,7 +11,10 @@ class Shader
 public:
 	Shader(){};
 	Shader(char* nameVert, char* nameFrag):
-		name_of_vertex_shader(nameVert), name_of_fragment_shader(nameFrag), is_used(false)
+		name_of_vertex_shader(nameVert), name_of_geometry_shader("none"), name_of_fragment_shader(nameFrag), is_used(false)
+	{};
+	Shader(char* nameVert, char* nameGeo, char* nameFrag) :
+		name_of_vertex_shader(nameVert), name_of_geometry_shader(nameGeo), name_of_fragment_shader(nameFrag), is_used(false)
 	{};
 
 	virtual void loadShader();
@@ -92,9 +95,10 @@ public:
 	virtual GLuint getPositionAttribute(){ return positionAttribute; };
 	virtual GLuint getNormalAttribute(){ return normalAttribute; };
 	virtual GLuint getTexCoordAttribute(){ return texCoordAttribute; };
+	virtual char* getShaderName(){ return name_of_fragment_shader; };
 	virtual bool isUsed(){ return is_used; };
 private:
-	char* name_of_vertex_shader, *name_of_fragment_shader;
+	char* name_of_vertex_shader, *name_of_geometry_shader, *name_of_fragment_shader;
 	GLuint shaderProgram;
 	GLuint projectionUniform, modelUniform, viewUniform, normalMatUniform, lightPosUniform, lightIntensityUniform, lightDirUniform, lightConeAngleUniform, ambientUniform, shadowTextureUniform, shadowTextureUniform2, depthVPUniform, depthBiasUniform, textureUniform;
 	GLuint diffuseColorUniform, specularColorUniform, shininessUniform, userPosUniform, texScaleUniform, isTexturedUniform;

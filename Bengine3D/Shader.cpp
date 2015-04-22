@@ -5,7 +5,12 @@ using namespace std;
 using namespace Angel;
 
 void Shader::loadShader(){
-	shaderProgram = Angel::InitShader(name_of_vertex_shader, name_of_fragment_shader, "fragColor");
+	if (name_of_geometry_shader == "none"){
+		shaderProgram = Angel::InitShader(name_of_vertex_shader, name_of_fragment_shader, "fragColor");
+	}
+	else {
+		shaderProgram = Angel::InitShader(name_of_vertex_shader, name_of_geometry_shader, name_of_fragment_shader, "fragColor");
+	}
 	projectionUniform = glGetUniformLocation(shaderProgram, "projection");
 	/*if (projectionUniform == GL_INVALID_INDEX) {
 		cerr << name_of_vertex_shader << " did not contain the 'projection' uniform." << endl;

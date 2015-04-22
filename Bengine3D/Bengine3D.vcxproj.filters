@@ -45,6 +45,15 @@
     <None Include="diffuse.vert">
       <Filter>Shaders</Filter>
     </None>
+    <None Include="wire.frag">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="wire.geo">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="wire.vert">
+      <Filter>Shaders</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Dependencies">

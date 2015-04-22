@@ -166,7 +166,7 @@ void Scene::createBox(vec3 position, vec3 scale, Shader shader, Material mat, ve
 	addObject(box);
 }
 
-void Scene::createPlane(vec3 position, vec2 scale, Shader shader, Material mat){
+void Scene::createPlane(vec3 position, vec3 scale, Shader shader, Material mat){
 	const int planeSize = 6;
 	Vertex rectangleData[planeSize] = {
 		{ vec3(-1.0, 0.0, 1.0), vec3(0, 1, 0), vec2(0.0, 0.0) },
@@ -176,7 +176,7 @@ void Scene::createPlane(vec3 position, vec2 scale, Shader shader, Material mat){
 		{ vec3(1.0, 0.0, 1.0), vec3(0, 1, 0), vec2(0.0, 1.0) },
 		{ vec3(1.0, 0.0, -1.0), vec3(0, 1, 0), vec2(1.0, 1.0) },
 	};
-	Object plane = Object(position, vec3(scale.x, 1.0f, scale.y), mat);
+	Object plane = Object(position, vec3(scale), mat);
 	plane.setVertexArrayBuffer(loadBufferData(rectangleData, planeSize, shader), planeSize);
 	addObject(plane);
 }

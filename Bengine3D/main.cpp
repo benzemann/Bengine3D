@@ -46,11 +46,15 @@ void keyPressed(unsigned char, int, int);
 void keyReleased(unsigned char, int, int);
 void mouseMovement(int x, int y);
 void loadShaders();
+void drawMirror(mat4 view);
 
 GLuint loadBufferData(Vertex* vertices, int vertexCount, Shader shader);
 
 User user;
-Shader shader, shadowShader;
+Shader shader, diffuseShader, wireShader, shadowShader;
+Object mirror;
+int currentShader = 0;
+vector<Shader> shaders;
 Scene scene;
 bool* keyStates = new bool[256];
 
@@ -61,8 +65,11 @@ int main(int argc, char* argv[])
 	cout << "  Press 'h' for help" << endl;
 
 	shadowShader = Shader("shadow.vert", "shadow.frag");
-	shader = Shader("diffuse.vert", "diffuse.frag");
-
+	diffuseShader = Shader("diffuse.vert", "diffuse.frag");
+	wireShader = Shader("wire.vert", "wire.geo", "wire.frag");
+	shaders.push_back(diffuseShader);
+	shaders.push_back(wireShader);
+	shader = shaders.at(0);
 	init(argc, argv);
 	
 	// Error handling
@@ -83,7 +90,7 @@ void init(int argc, char* argv[])
 	// Set the window size
 	glutInitWindowSize(WINDOW_WIDTH, WINDOW_HEIGHT);
 	// Set the window position
-	glutInitWindowPosition(800, 100);
+	glutInitWindowPosition(900, 100);
 	// Creates the window with a title
 	WIN_ID = glutCreateWindow("Bengine3D");
 	// Binds the functions to respond when necessary
@@ -119,7 +126,7 @@ void loadShaders(){
 	shader.loadShader();
 	shadowShader.loadShader();
 }
-// Setup the scene here!q
+// Setup the scene here!
 void setupScene(){
 	scene = Scene();
 	// Materials
@@ -134,14 +141,21 @@ void setupScene(){
 	Material box = Material(512, 512, "./Textures/box.bmp");
 	Material grass = Material(640, 640, "./Textures/grass.bmp", vec2(30.0f));
 	Material checkerBoard = Material(512, 512, "./Textures/checkerBoard.bmp", vec2(0.5f));
+	Material houseMaterial = Material(1024, 1024, "./Textures/houseTex.bmp");
 	// The User
 	user = User(vec3(5.0f, 0.5f, 0.0f));
 	// Objects
-	scene.createPlane(vec3(0.0f, 0.0f, 0.0f), vec2(20.0f, 20.0f), shader, grass);
+	scene.createPlane(vec3(0.0f, 0.0f, 0.0f), vec3(20.0f, 1.0f, 20.0f), shader, grass);
 	scene.createBox(vec3(0.0f, 5.0f, 0.0f), vec3(2.0f), shader, checkerBoard, vec3(0.0f, 45.0f, 0.0f));
 	scene.createBox(vec3(0.0f, 0.5f, 2.0f), vec3(1.0f), shader, box, vec3(0.0f, 45.0f, 0.0f));
-	scene.createPlane(vec3(5.0f, 0.05f, 5.0f), vec2(2.0f, 2.0f), shader, copper);
-	scene.createOBJ(vec3(-5.0f, 1.0f, -5.0f), vec3(1.0f), shader, defaultMat, vec3(0.0f), "./Models/test.obj");
+	scene.createPlane(vec3(5.0f, 0.01f, 5.0f), vec3(2.0f, 1.0f, 2.0f), shader, copper);
+	scene.createOBJ(vec3(-10.0f, 0.0f, -5.0f), vec3(0.3f), shader, houseMaterial, vec3(0.0f), "./Models/house.obj");
+	scene.createOBJ(vec3(0.0f, 0.0f, -10.0f), vec3(0.15f), shader, defaultMat, vec3(0.0f), "./Models/mirrorFrame.obj");
+	scene.createPlane(vec3(0.0f, 0.5f, -10.0f), vec3(0.38f, 0.5f, 1.0f), shader, defaultMat);
+	mirror = scene.getObject(6);
+	mirror.setRotation(vec3(0.0f, 90.0f, 90.0f));
+	scene.removeObject(6);
+	
 	// Ligth Sources
 	scene.createLightSource(vec3(0.5f, 0.5f, 0.0f), vec3(1.0f), 1);
 	scene.createLightSource(vec3(-0.5f, 0.5f, 0.0f), vec3(1.0f), 0);
@@ -163,7 +177,7 @@ void render()
 		updateShadowTexture(i);
 	}
 	// Clears the color and depth buffer
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 	//updateShadowTexture();
 	glViewport(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
 	// Sets the background color
@@ -174,12 +188,14 @@ void render()
 	shader.setProjectionUniform(projection);
 	shader.setUserPosUniform(user.getPosition());
 	scene.setShadowUniforms(shader);
-	// Draw the scene from the users point of view
 	mat4 view = user.getViewMatrix();
+	// Draw the scene from the users point of view
 	scene.drawObjects(shader, view);
+	// Draw the mirrored scene
+	drawMirror(view);
 	// Set the ambient and light uniforms
 	scene.setLightUniforms(shader);
-	shader.setAmbientUniform(vec4(0.2f));
+	shader.setAmbientUniform(vec4(0.05f));
 	// Swaps the buffers of the current window and checks for errors
 	glutSwapBuffers();
 	Angel::CheckError();
@@ -246,6 +262,39 @@ void buildFrameBufferObject(int id) {
 	// Binds the normal frame buffer for rendering the scene
 	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
 }
+// Draws the scene mirrored when looking though the mirror (WRONG SHADOWS)
+void drawMirror(mat4 view){
+	glEnable(GL_STENCIL_TEST); //Enable using the stencil buffer
+	glColorMask(0, 0, 0, 0); //Disable drawing colors to the screen
+	glDisable(GL_DEPTH_TEST); //Disable depth testing
+	glStencilFunc(GL_ALWAYS, 1, 1); //Make the stencil test always pass
+	//Make pixels in the stencil buffer be set to 1 when the stencil test passes
+	glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
+	//Set all of the pixels covered by the floor to be 1 in the stencil buffer
+	mirror.draw(shader, view);
+	glColorMask(1, 1, 1, 1); //Enable drawing colors to the screen
+	glEnable(GL_DEPTH_TEST); //Enable depth testing
+	//Make the stencil test pass only when the pixel is 1 in the stencil buffer
+	glStencilFunc(GL_EQUAL, 1, 1);
+	glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP); //Make the stencil buffer not change
+	glDisable(GL_CULL_FACE);
+	vec3 lPos = scene.getLightPos(0);
+	vec3 tempPos = lPos;
+	scene.setLightPos(vec3(lPos.x, lPos.y, -lPos.z), 0);
+	scene.setLightUniforms(shader);
+	for (int i = 0; i < scene.getNumberOfObjects(); i++){
+		Object temp = scene.getObject(i);
+		vec3 tempScale = temp.getScale();
+		temp.scaleObj(vec3(tempScale.x, tempScale.y, -tempScale.z));
+		vec3 tempPos = temp.getPos();
+		tempPos = vec3(tempPos.x, tempPos.y, -((tempPos.z - mirror.getPos().z)*2.0f));
+		temp.setPos(tempPos);
+		temp.draw(shader, view);
+	}
+	scene.setLightPos(tempPos, 0);
+	glEnable(GL_CULL_FACE);
+	glDisable(GL_STENCIL_TEST);
+}
 // Updates the shadow Map
 void updateShadowTexture(int id){
 	// Disable culling to let the back faces contribute to shadows
@@ -290,6 +339,7 @@ void showControls(){
 	cout << "  X - Fly mode" << endl;
 	cout << "  C - Create a box at the users position" << endl;
 	cout << "  R - Reload shaders" << endl;
+	cout << "  G - Cycle through the different shaders" << endl;
 	cout << "  M - Show the performance in miliseconds per frame (updated every 300 frames)" << endl;
 	cout << "  H - Show this info again" << endl;
 	cout << "  Q - Quit application" << endl;
@@ -336,7 +386,7 @@ void keyOperations(){
 			fullscreen = true;
 		}
 		else {
-			glutPositionWindow(800, 100);
+			glutPositionWindow(900, 100);
 			glutReshapeWindow(800, 600);
 			fullscreen = false;
 		}
@@ -370,21 +420,26 @@ void keyOperations(){
 	if (keyStates['r'] == true){
 		reloadShaders = true;
 	}
-}
-// Called when the mouse is moved
-void mouseMovement(int x, int y){
-	user.rotateWithMouse(x, y, WINDOW_WIDTH, WINDOW_HEIGHT);
-}
-// Sets the key states when a key is pressed
-void keyPressed(unsigned char key, int x, int y){
-	keyStates[key] = true;
-	if (key == 'm'){
+	if (keyStates['g'] == true){
+		keyStates['g'] = false;
+		currentShader += 1;
+		if (currentShader >= shaders.size()){
+			currentShader = 0;
+		}
+		shader = shaders.at(currentShader);
+		loadShaders();
+		cout << "  Changed shader to " << shader.getShaderName() << endl;
+	}
+	if (keyStates['m'] == true){
+		keyStates['m'] = false;
 		showMsPerFrame = !showMsPerFrame;
 	}
-	else if (key == 'h'){
+	if (keyStates['h'] == true){
+		keyStates['h'] = false;
 		showControls();
 	}
-	else if (key == 'x'){
+	if (keyStates['x'] == true){
+		keyStates['x'] = false;
 		flyMode = !flyMode;
 		if (!flyMode){
 			user.setPostion(vec3(user.getPosition().x, 0.5f, user.getPosition().z));
@@ -394,11 +449,13 @@ void keyPressed(unsigned char key, int x, int y){
 			cout << "  FlyMode is ON" << endl;
 		}
 	}
-	else if (key == 'c'){
+	if (keyStates['c'] == true){
+		keyStates['c'] = false;
 		Material box = Material(512, 512, "./Textures/box.bmp");
 		scene.createBox(user.getPosition(), vec3(1.0f), shader, box, vec3(0.0f, 0.0f, 0.0f));
 	}
-	else if (key == 'k'){
+	if (keyStates['k'] == true){
+		keyStates['k'] = false;
 		if (scene.getLightInt(1).x == 1.0f){
 			scene.setLightInt(vec3(0.0f), 1);
 			cout << "  Flashlight off" << endl;
@@ -408,6 +465,14 @@ void keyPressed(unsigned char key, int x, int y){
 			cout << "  Flashlight on" << endl;
 		}
 	}
+}
+// Called when the mouse is moved
+void mouseMovement(int x, int y){
+	user.rotateWithMouse(x, y, WINDOW_WIDTH, WINDOW_HEIGHT);
+}
+// Sets the key states when a key is pressed
+void keyPressed(unsigned char key, int x, int y){
+	keyStates[key] = true;
 }
 // Sets the key states when a key is released
 void keyReleased(unsigned char key, int x, int y){

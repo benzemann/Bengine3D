@@ -39,7 +39,7 @@ void main(void)
 		vec3 specular = specularCoefficient * specularColor.xyz * lightIntensity[i];
 		float visibility = 1.0f;
 		vec4 sCoord = shadowCoord[i];
-		sCoord.z -= 0.005f;
+		sCoord.z -= 0.001f;
 		float attenuation = 1.0f;
 		if(lightDir[i].w == 0.0f){
 			float distanceToLight = length(worldPos-lightPos[i].xyz);

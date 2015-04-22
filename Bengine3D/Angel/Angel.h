@@ -64,6 +64,10 @@ char* readShaderSource(const char* shaderFile);
 GLuint InitShader( const char* vertexShaderFile,
 		   const char* fragmentShaderFile ,
 		   const char* outputAttributeName);
+GLuint InitShader(const char* vertexShaderFile,
+	const char* geometryShaderFile,
+	const char* fragmentShaderFile,
+	const char* outputAttributeName);
 
 //  Defined constant for when numbers are too small to be used in the
 //    denominator of a division operation.  This is only used if the
