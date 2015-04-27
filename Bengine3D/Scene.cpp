@@ -181,6 +181,41 @@ void Scene::createPlane(vec3 position, vec3 scale, Shader shader, Material mat){
 	addObject(plane);
 }
 
+void Scene::createLine(vec3 start, vec3 slut, Shader shader, Material mat){
+	const int lineSize = 2;
+	Vertex lineData[lineSize] = {
+		{ start, vec3(0, 1, 0), vec2(0.0, 0.0) },
+		{ slut, vec3(0, 1, 0), vec2(0.0, 1.0) },
+	};
+	Object line = Object(start, vec3(1.0f), mat);
+	GLuint lineVAO = loadBufferData(lineData, lineSize, shader);
+	lines.push_back(line);
+	lineVAOs.push_back(lineVAO);
+}
+
+void Scene::drawLines(Shader& shader, mat4 view){
+	if (!shader.isUsed()){
+		shader.useShader();
+	}
+	for (int i = 0; i < lines.size(); i++){
+		glBindVertexArray(lineVAOs[i]);
+		mat4 model = lines[i].getModelMatrix();
+		shader.setViewUniform(view);
+		shader.setModelUniform(model);
+
+		mat3 normalMat = Normal(model);
+		shader.setNormalMatUniform(normalMat);
+		shader.setDiffuseColorUniform(vec3(1.0f, 0.0f, 0.0f));
+		shader.setSpecularColorUniform(vec3(1.0f, 0.0f, 0.0f));
+		shader.setShininessUniform(1.0f);
+
+		shader.setIsTexturedUniform(0);
+		shader.setTexScaleUniform(vec2(1.0f));
+		glLineWidth(3.0f);
+		glDrawArrays(GL_LINES, 0, 2);
+	}
+}
+
 void Scene::drawObjects(Shader shader, mat4 view){
 	for each (Object o in objects)
 	{

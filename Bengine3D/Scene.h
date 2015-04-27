@@ -31,6 +31,7 @@ public:
 	virtual bool loadOBJ(const char * path, vector<vec3> & out_vertices, vector<vec2> & out_uvs, vector<vec3> & out_normals);
 	virtual void createOBJ(vec3 position, vec3 scale, Shader shader, Material mat, vec3 rotation, const char * path);
 	virtual void createPlane(vec3 position, vec3 scale, Shader shader, Material mat);
+	virtual void createLine(vec3 start, vec3 slut, Shader shader, Material mat);
 	virtual void createBox(vec3 position, vec3 scale, Shader shader, Material mat, vec3 rotation = vec3(0.0f));
 	virtual void createLightSource(vec3 pos, vec3 intensity, int type){
 		Light l(pos, intensity, type, 25.0f, vec3(0.0f, 0.0f, 0.0f));
@@ -72,6 +73,21 @@ public:
 	virtual vec3 getLightInt(int id){ return lights[id].getIntensity(); };
 	virtual void setLightInt(vec3 intensity, int id){ lights[id].setIntensity(intensity);};
 	virtual void drawObjects(Shader shader,mat4 view);
+	virtual void drawLines(Shader& shader, mat4 view);
+	virtual Object getLine(int id){ return lines.at(id); };
+	virtual void setLine(int id, Object line){ lines.at(id) = line; };
+	virtual void setLineVAO(int id, GLuint vao){ lineVAOs.at(id) = vao; };
+	virtual void setLineStartEnd(int id, vec3 start, vec3 end, Shader shader, Material mat){
+		const int lineSize = 2;
+		Vertex lineData[lineSize] = {
+			{ start, vec3(0, 1, 0), vec2(0.0, 0.0) },
+			{ end, vec3(0, 1, 0), vec2(0.0, 1.0) },
+		};
+		Object line = Object(start, vec3(1.0f), mat);
+		GLuint lineVAO = loadBufferData(lineData, lineSize, shader);
+		setLine(id, line);
+		setLineVAO(id, lineVAO);
+	};
 	virtual Light getLight(int id){ return lights.at(id); };
 	virtual void setLight(int id, Light l){ lights.at(id) = l; };
 	virtual int getNumberOfLights(){ return lights.size(); };
@@ -79,5 +95,7 @@ public:
 private:
 	vector <Object> objects;
 	vector <Light> lights;
+	vector <Object> lines;
+	vector <GLuint> lineVAOs;
 };
 

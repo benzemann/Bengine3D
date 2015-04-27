@@ -155,7 +155,9 @@ void setupScene(){
 	mirror = scene.getObject(6);
 	mirror.setRotation(vec3(0.0f, 90.0f, 90.0f));
 	scene.removeObject(6);
-	
+	// Lines
+	scene.createLine(vec3(0.0f), vec3(0.5f, 0.5f, 0.0f) * 100.0f, shader, defaultMat);
+	scene.setLineStartEnd(0, vec3(2.0f), vec3(3.0f), shader, defaultMat);
 	// Ligth Sources
 	scene.createLightSource(vec3(0.5f, 0.5f, 0.0f), vec3(1.0f), 1);
 	scene.createLightSource(vec3(-0.5f, 0.5f, 0.0f), vec3(1.0f), 0);
@@ -191,6 +193,7 @@ void render()
 	mat4 view = user.getViewMatrix();
 	// Draw the scene from the users point of view
 	scene.drawObjects(shader, view);
+	scene.drawLines(shader, view);
 	// Draw the mirrored scene
 	drawMirror(view);
 	// Set the ambient and light uniforms
