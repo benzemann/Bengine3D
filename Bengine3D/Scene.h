@@ -31,7 +31,7 @@ public:
 	virtual bool loadOBJ(const char * path, vector<vec3> & out_vertices, vector<vec2> & out_uvs, vector<vec3> & out_normals);
 	virtual void createOBJ(vec3 position, vec3 scale, Shader shader, Material mat, vec3 rotation, const char * path);
 	virtual void createPlane(vec3 position, vec3 scale, Shader shader, Material mat);
-	virtual void createLine(vec3 start, vec3 slut, Shader shader, Material mat);
+	virtual void createLine(vec3 start, vec3 end, Shader shader, Material mat);
 	virtual void createBox(vec3 position, vec3 scale, Shader shader, Material mat, vec3 rotation = vec3(0.0f));
 	virtual void createLightSource(vec3 pos, vec3 intensity, int type){
 		Light l(pos, intensity, type, 25.0f, vec3(0.0f, 0.0f, 0.0f));

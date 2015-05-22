@@ -63,7 +63,9 @@ int main(int argc, char* argv[])
 	cout << "--------------------------------BENGINE 3D v0.1---------------------------------" << endl;
 	cout << endl;
 	cout << "  Press 'h' for help" << endl;
-
+	for (int i = 0; i < 256; i++){
+		keyStates[i] = false;
+	}
 	shadowShader = Shader("shadow.vert", "shadow.frag");
 	diffuseShader = Shader("diffuse.vert", "diffuse.frag");
 	wireShader = Shader("wire.vert", "wire.geo", "wire.frag");
@@ -123,7 +125,9 @@ void init(int argc, char* argv[])
 }
 // Function to load the shaders
 void loadShaders(){
+	// IMPLEMENT A LOOP TO LOAD SHADERS!
 	shader.loadShader();
+	wireShader.loadShader();
 	shadowShader.loadShader();
 }
 // Setup the scene here!
@@ -157,7 +161,6 @@ void setupScene(){
 	scene.removeObject(6);
 	// Lines
 	scene.createLine(vec3(0.0f), vec3(0.5f, 0.5f, 0.0f) * 100.0f, shader, defaultMat);
-	scene.setLineStartEnd(0, vec3(2.0f), vec3(3.0f), shader, defaultMat);
 	// Ligth Sources
 	scene.createLightSource(vec3(0.5f, 0.5f, 0.0f), vec3(1.0f), 1);
 	scene.createLightSource(vec3(-0.5f, 0.5f, 0.0f), vec3(1.0f), 0);
@@ -198,7 +201,7 @@ void render()
 	drawMirror(view);
 	// Set the ambient and light uniforms
 	scene.setLightUniforms(shader);
-	shader.setAmbientUniform(vec4(0.05f));
+	shader.setAmbientUniform(vec4(0.1f));
 	// Swaps the buffers of the current window and checks for errors
 	glutSwapBuffers();
 	Angel::CheckError();

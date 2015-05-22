@@ -181,11 +181,11 @@ void Scene::createPlane(vec3 position, vec3 scale, Shader shader, Material mat){
 	addObject(plane);
 }
 
-void Scene::createLine(vec3 start, vec3 slut, Shader shader, Material mat){
+void Scene::createLine(vec3 start, vec3 end, Shader shader, Material mat){
 	const int lineSize = 2;
 	Vertex lineData[lineSize] = {
 		{ start, vec3(0, 1, 0), vec2(0.0, 0.0) },
-		{ slut, vec3(0, 1, 0), vec2(0.0, 1.0) },
+		{ end, vec3(0, 1, 0), vec2(0.0, 1.0) },
 	};
 	Object line = Object(start, vec3(1.0f), mat);
 	GLuint lineVAO = loadBufferData(lineData, lineSize, shader);

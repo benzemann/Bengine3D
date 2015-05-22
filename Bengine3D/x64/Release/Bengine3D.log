@@ -1,0 +1,75 @@
+﻿Build started 11-05-2015 16:45:39.
+     1>Project "C:\Users\Jeppe\Dropbox\Jeppe\Programmering\Bengine3D\Bengine3D\Bengine3D.vcxproj" on node 2 (Build target(s)).
+     1>Link:
+         D:\Programmer\Visual Studio\VC\bin\x86_amd64\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\Jeppe\Dropbox\Jeppe\Programmering\Bengine3D\x64\Release\Bengine3D.exe" /INCREMENTAL:NO /NOLOGO ../dependencies/lib/glew32.lib ../dependencies/lib/freeglut.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:\Users\Jeppe\Dropbox\Jeppe\Programmering\Bengine3D\x64\Release\Bengine3D.pdb" /SUBSYSTEM:CONSOLE /OPT:REF /OPT:ICF /LTCG /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\Jeppe\Dropbox\Jeppe\Programmering\Bengine3D\x64\Release\Bengine3D.lib" /MACHINE:X64 x64\Release\InitShader.obj
+         x64\Release\Light.obj
+         x64\Release\main.obj
+         x64\Release\Material.obj
+         x64\Release\Object.obj
+         x64\Release\Scene.obj
+         x64\Release\Shader.obj
+         x64\Release\User.obj
+     1>InitShader.obj : error LNK2001: unresolved external symbol __imp___glewCreateShader
+     1>InitShader.obj : error LNK2001: unresolved external symbol __imp___glewGetShaderInfoLog
+     1>InitShader.obj : error LNK2001: unresolved external symbol __imp___glewLinkProgram
+     1>InitShader.obj : error LNK2001: unresolved external symbol __imp___glewCompileShader
+     1>InitShader.obj : error LNK2001: unresolved external symbol __imp___glewBindFragDataLocation
+     1>InitShader.obj : error LNK2001: unresolved external symbol __imp___glewUseProgram
+     1>InitShader.obj : error LNK2001: unresolved external symbol __imp___glewShaderSource
+     1>InitShader.obj : error LNK2001: unresolved external symbol __imp___glewGetProgramiv
+     1>InitShader.obj : error LNK2001: unresolved external symbol __imp___glewGetShaderiv
+     1>InitShader.obj : error LNK2001: unresolved external symbol __imp___glewGetProgramInfoLog
+     1>InitShader.obj : error LNK2001: unresolved external symbol __imp___glewCreateProgram
+     1>InitShader.obj : error LNK2001: unresolved external symbol __imp___glewAttachShader
+     1>main.obj : error LNK2001: unresolved external symbol __imp___glutCreateWindowWithExit
+     1>main.obj : error LNK2001: unresolved external symbol __imp___glewActiveTexture
+     1>main.obj : error LNK2001: unresolved external symbol __imp_glutReshapeWindow
+     1>main.obj : error LNK2001: unresolved external symbol __imp___glutInitWithExit
+     1>main.obj : error LNK2001: unresolved external symbol __imp_glutInitWindowPosition
+     1>main.obj : error LNK2001: unresolved external symbol __imp_glutFullScreen
+     1>main.obj : error LNK2001: unresolved external symbol __imp_glewInit
+     1>main.obj : error LNK2001: unresolved external symbol __imp_glutPositionWindow
+     1>main.obj : error LNK2001: unresolved external symbol __imp___glewFramebufferTexture2D
+     1>main.obj : error LNK2001: unresolved external symbol __imp___glewUniform2fv
+     1>main.obj : error LNK2001: unresolved external symbol __imp_glutSwapBuffers
+     1>main.obj : error LNK2001: unresolved external symbol __imp_glutReshapeFunc
+     1>main.obj : error LNK2001: unresolved external symbol __imp___glewUniform4fv
+     1>main.obj : error LNK2001: unresolved external symbol __imp_glutGet
+     1>main.obj : error LNK2001: unresolved external symbol __imp_glutSetCursor
+     1>main.obj : error LNK2001: unresolved external symbol __imp_glutInitDisplayMode
+     1>main.obj : error LNK2001: unresolved external symbol __imp_glewGetErrorString
+     1>main.obj : error LNK2001: unresolved external symbol __imp___glewUniformMatrix4fv
+     1>main.obj : error LNK2001: unresolved external symbol __imp___glewGenFramebuffers
+     1>main.obj : error LNK2001: unresolved external symbol __imp_glewExperimental
+     1>main.obj : error LNK2001: unresolved external symbol __imp___glewUniform1f
+     1>main.obj : error LNK2001: unresolved external symbol __imp___glewUniformMatrix3fv
+     1>main.obj : error LNK2001: unresolved external symbol __imp___glewBindFramebuffer
+     1>main.obj : error LNK2001: unresolved external symbol __imp_glutPassiveMotionFunc
+     1>main.obj : error LNK2001: unresolved external symbol __imp___glewUniform3fv
+     1>main.obj : error LNK2001: unresolved external symbol __imp_glutKeyboardFunc
+     1>main.obj : error LNK2001: unresolved external symbol __imp___glewUniform1fv
+     1>main.obj : error LNK2001: unresolved external symbol __imp_glutDestroyWindow
+     1>main.obj : error LNK2001: unresolved external symbol __imp___glewUniform1i
+     1>main.obj : error LNK2001: unresolved external symbol __imp_glutMainLoop
+     1>main.obj : error LNK2001: unresolved external symbol __imp_glutInitWindowSize
+     1>main.obj : error LNK2001: unresolved external symbol __imp_glutPostRedisplay
+     1>main.obj : error LNK2001: unresolved external symbol __imp_glutDisplayFunc
+     1>main.obj : error LNK2001: unresolved external symbol __imp_glutKeyboardUpFunc
+     1>main.obj : error LNK2001: unresolved external symbol __imp___glewCheckFramebufferStatus
+     1>Material.obj : error LNK2001: unresolved external symbol __imp___glewGenerateMipmap
+     1>Object.obj : error LNK2001: unresolved external symbol __imp___glewBindVertexArray
+     1>Scene.obj : error LNK2001: unresolved external symbol __imp___glewBindBuffer
+     1>Scene.obj : error LNK2001: unresolved external symbol __imp___glewVertexAttribPointer
+     1>Scene.obj : error LNK2001: unresolved external symbol __imp___glewGenVertexArrays
+     1>Scene.obj : error LNK2001: unresolved external symbol __imp___glewBufferData
+     1>Scene.obj : error LNK2001: unresolved external symbol __imp___glewGenBuffers
+     1>Scene.obj : error LNK2001: unresolved external symbol __imp___glewEnableVertexAttribArray
+     1>Shader.obj : error LNK2001: unresolved external symbol __imp___glewGetAttribLocation
+     1>Shader.obj : error LNK2001: unresolved external symbol __imp___glewGetUniformLocation
+     1>User.obj : error LNK2001: unresolved external symbol __imp_glutWarpPointer
+     1>C:\Users\Jeppe\Dropbox\Jeppe\Programmering\Bengine3D\x64\Release\Bengine3D.exe : fatal error LNK1120: 58 unresolved externals
+     1>Done Building Project "C:\Users\Jeppe\Dropbox\Jeppe\Programmering\Bengine3D\Bengine3D\Bengine3D.vcxproj" (Build target(s)) -- FAILED.
+
+Build FAILED.
+
+Time Elapsed 00:00:05.80
